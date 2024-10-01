@@ -1,0 +1,185 @@
+#include <iostream>
+using namespace std;
+
+// Node structure
+struct Node {
+    int data;
+    Node* next;
+};
+
+// Singly Linked List class
+class SinglyLinkedList {
+private:
+    Node* head;
+
+public:
+    SinglyLinkedList() : head(nullptr) {}
+
+    // Function to insert a node at the end
+    void insert(int value) {
+        Node* newNode = new Node();
+        newNode->data = value;
+        newNode->next = nullptr;
+
+        if (head == nullptr) {
+            head = newNode;
+        } else {
+            Node* temp = head;
+            while (temp->next != nullptr) {
+                temp = temp->next;
+            }
+            temp->next = newNode;
+        }
+    }
+
+    // Function to delete a node by value
+    void deleteByValue(int value) {
+        if (head == nullptr) {
+            cout << "List is empty.\n";
+            return;
+        }
+
+        if (head->data == value) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+            return;
+        }
+
+        Node* temp = head;
+        while (temp->next != nullptr && temp->next->data != value) {
+            temp = temp->next;
+        }
+
+        if (temp->next == nullptr) {
+            cout << "Value not found.\n";
+            return;
+        }
+
+        Node* toDelete = temp->next;
+        temp->next = temp->next->next;
+        delete toDelete;
+    }
+
+    // Function to display the list
+    void display() {
+        if (head == nullptr) {
+            cout << "List is empty.\n";
+            return;
+        }
+
+        Node* temp = head;
+        while (temp != nullptr) {
+            cout << temp->data << " -> ";
+            temp = temp->next;
+        }
+        cout << "NULL\n";
+    }
+
+    // Function to search for a value in the list
+    void search(int value) {
+        Node* temp = head;
+        int pos = 1;
+
+        while (temp != nullptr) {
+            if (temp->data == value) {
+                cout << "Value " << value << " found at position " << pos << ".\n";
+                return;
+            }
+            temp = temp->next;
+            pos++;
+        }
+
+        cout << "Value not found.\n";
+    }
+
+    // Function to edit a value at a given position
+    void editAtPosition(int position, int newValue) {
+        Node* temp = head;
+        int pos = 1;
+
+        while (temp != nullptr && pos < position) {
+            temp = temp->next;
+            pos++;
+        }
+
+        if (temp == nullptr) {
+            cout << "Invalid position.\n";
+        } else {
+            temp->data = newValue;
+            cout << "Position " << position << " updated to " << newValue << ".\n";
+        }
+    }
+
+    // Function to sort the linked list in ascending order
+    void sortList() {
+        if (!head || !head->next) return;
+
+        for (Node* i = head; i->next != nullptr; i = i->next) {
+            for (Node* j = i->next; j != nullptr; j = j->next) {
+                if (i->data > j->data) {
+                    swap(i->data, j->data);
+                }
+            }
+        }
+
+        cout << "List sorted.\n";
+    }
+};
+
+// Main function
+int main() {
+    SinglyLinkedList list;
+    int choice, value, position;
+
+    do {
+        cout << "\nMENU:\n";
+        cout << "1. Insert\n";
+        cout << "2. Delete\n";
+        cout << "3. Display\n";
+        cout << "4. Search\n";
+        cout << "5. Edit at Position\n";
+        cout << "6. Sort\n";
+        cout << "7. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Enter value to insert: ";
+                cin >> value;
+                list.insert(value);
+                break;
+            case 2:
+                cout << "Enter value to delete: ";
+                cin >> value;
+                list.deleteByValue(value);
+                break;
+            case 3:
+                list.display();
+                break;
+            case 4:
+                cout << "Enter value to search: ";
+                cin >> value;
+                list.search(value);
+                break;
+            case 5:
+                cout << "Enter position to edit: ";
+                cin >> position;
+                cout << "Enter new value: ";
+                cin >> value;
+                list.editAtPosition(position, value);
+                break;
+            case 6:
+                list.sortList();
+                break;
+            case 7:
+                cout << "Exiting.\n";
+                break;
+            default:
+                cout << "Invalid choice.\n";
+        }
+    } while (choice != 7);
+
+    return 0;
+}
